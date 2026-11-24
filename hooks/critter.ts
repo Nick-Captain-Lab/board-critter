@@ -1,4 +1,4 @@
-import { ALMANAC, ALMANAC_KEYS } from './almanac'
+import { ALMANAC, ALMANAC_KEYS } from './almanac.ts'
 
 // 純函式：時間、季節、節日、小怪獸 SVG。不碰 $，方便測試。
 

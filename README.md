@@ -4,7 +4,25 @@ A tiny Claude Code mod: a pane with an animated pixel critter that reacts to wha
 
 一個 Claude Code 的小 mod：在側邊面板放一隻會動的橘色小怪獸。它會跟著 Claude 的工作狀態、白天晚上、節氣與節日換動作和場景。打開一堆文字介面時，一眼就認得出這是 Claude，看了也療癒。
 
+<p align="center"><img src="docs/ui-mockup.svg" width="720" alt="介面示意：左邊是對話，右邊面板裡的小怪獸在走路"></p>
+<p align="center"><sub>介面示意圖（簡化模擬，不是真實截圖）</sub></p>
+
 > 非官方粉絲作品。小怪獸造型取自 Claude Code 啟動畫面的吉祥物 Clawd，相關名稱與造型屬於 Anthropic。本專案與 Anthropic 無關，也未經其認可。
+
+## 場景圖鑑
+
+| | |
+| :-: | :-: |
+| <img src="docs/scene-early-spring.svg" width="240" alt="早春・走路"> | <img src="docs/scene-plum-rain.svg" width="240" alt="梅雨・呼吸"> |
+| 早春・走路 | 梅雨・呼吸 |
+| <img src="docs/scene-midsummer.svg" width="240" alt="盛夏・跳"> | <img src="docs/scene-late-autumn.svg" width="240" alt="深秋・走路"> |
+| 盛夏・跳 | 深秋・走路 |
+| <img src="docs/scene-deep-winter-night.svg" width="240" alt="寒冬夜・睡覺"> | <img src="docs/scene-new-year.svg" width="240" alt="跨年"> |
+| 寒冬夜・睡覺 | 跨年 |
+| <img src="docs/scene-lunar-new-year.svg" width="240" alt="過年"> | <img src="docs/scene-dragon-boat.svg" width="240" alt="端午"> |
+| 過年 | 端午 |
+| <img src="docs/scene-mid-autumn.svg" width="240" alt="中秋"> | <img src="docs/scene-christmas.svg" width="240" alt="聖誕節"> |
+| 中秋 | 聖誕節 |
 
 ## 它會怎麼變
 
@@ -84,6 +102,7 @@ claude plugin test .
 - `hooks/critter.ts`：狀態、季節、節日判斷與 SVG 產生（純函式）
 - `hooks/almanac.ts`：節氣與農曆節日日期表
 - `hooks/register.tsx`：面板與事件
+- `scripts/gallery.ts`：重新產生 `docs/` 裡的示意圖（`node --experimental-strip-types scripts/gallery.ts`，Node 22.6 以上）
 
 ## 授權
 
