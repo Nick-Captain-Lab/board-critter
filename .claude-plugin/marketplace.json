@@ -1,0 +1,15 @@
+{
+  "name": "nick-captain-lab",
+  "owner": {
+    "name": "Nick Captain Lab"
+  },
+  "metadata": {
+    "description": "Nick Captain Lab 的 Claude Code mod"
+  },
+  "plugins": [
+    {
+      "name": "board-critter",
+      "source": "./"
+    }
+  ]
+}

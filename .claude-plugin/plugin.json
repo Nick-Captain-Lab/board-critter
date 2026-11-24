@@ -1,0 +1,46 @@
+{
+  "name": "board-critter",
+  "version": "0.1.0",
+  "description": "會跟著工作狀態、時間、節氣與節日換場景的看板小怪獸（非官方粉絲作品）",
+  "author": { "name": "Nick Captain Lab" },
+  "license": "MIT",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "timezone": {
+      "type": "number",
+      "title": "時區（UTC 偏移小時）",
+      "description": "台灣、香港是 8，日本是 9，倫敦冬天是 0。節氣與農曆資料以 UTC+8 為準，其他時區可能差一天",
+      "default": 8
+    },
+    "nightFrom": {
+      "type": "number",
+      "title": "幾點天黑",
+      "description": "從這個整點開始換成夜空（0～23）",
+      "default": 18
+    },
+    "nightTo": {
+      "type": "number",
+      "title": "幾點天亮",
+      "description": "到這個整點換回白天（0～23）",
+      "default": 6
+    },
+    "sleepMinutes": {
+      "type": "number",
+      "title": "閒置幾分鐘睡著",
+      "description": "Claude 沒動靜多久後小怪獸睡覺；填 0 就永遠不睡",
+      "default": 10
+    },
+    "holidays": {
+      "type": "boolean",
+      "title": "顯示節日場景",
+      "description": "關掉後只換季節與早晚，不過節",
+      "default": true
+    },
+    "autoOpen": {
+      "type": "boolean",
+      "title": "開對話時自動打開面板",
+      "description": "關掉後要輸入 /critter 才會打開",
+      "default": true
+    }
+  }
+}
