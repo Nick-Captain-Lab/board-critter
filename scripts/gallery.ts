@@ -17,7 +17,7 @@ export const SHOTS: Shot[] = [
   { file: 'early-spring', mood: 'walk', scene: day('earlySpring') },
   { file: 'plum-rain', mood: 'bob', scene: day('plumRain') },
   { file: 'midsummer', mood: 'jump', scene: day('midsummer') },
-  { file: 'late-autumn', mood: 'walk', scene: day('lateAutumn') },
+  { file: 'winter-solstice', mood: 'bob', scene: { stage: 'deepWinter', holiday: null, night: false, term: '冬至' } },
   { file: 'deep-winter-night', mood: 'sleep', scene: { stage: 'deepWinter', holiday: null, night: true } },
   { file: 'new-year', mood: 'jump', scene: { stage: 'deepWinter', holiday: 'newyear', night: true, year: 2027 } },
   { file: 'lunar-new-year', mood: 'walk', scene: { stage: 'earlySpring', holiday: 'lunarNewYear', night: false } },

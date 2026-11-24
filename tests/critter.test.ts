@@ -42,6 +42,8 @@ test('季節用節氣切成 8 段，節日日期查表', async () => {
   expect(stageOf('2026-12-22')).toBe('deepWinter') // 冬至
   expect(sceneOf('2026-12-22', 10).term).toBe('冬至')
   expect(sceneOf('2027-06-21', 10).term).toBe('夏至')
+  expect(mascotSvg('bob', sceneOf('2026-12-22', 10))).toContain('#FF4F7B') // 冬至臉紅
+  expect(mascotSvg('bob', sceneOf('2027-06-21', 10))).not.toContain('#FF4F7B') // 夏至不臉紅
   expect(holidayOf('2026-12-24')).toBe('christmas')
   expect(holidayOf('2026-12-31')).toBe('newyear')
   expect(holidayOf('2027-01-01')).toBe('newyear')

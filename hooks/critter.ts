@@ -470,9 +470,9 @@ export function mascotSvg(m: Mood, sc: Scene = { stage: 'earlySpring', holiday: 
           .join('')
       : `<path class="drip" transform="translate(126 4)" d="M0 0 Q-4 7 0 9 Q4 7 0 0Z" fill="#7FC4E8"/>`
     : ''
-  // 有節日就臉紅紅（清明掃墓氣氛肅穆，不臉紅）
+  // 有節日就臉紅紅（清明掃墓氣氛肅穆，不臉紅）；冬至吃湯圓也算過節
   const blush =
-    sc.holiday === null || sc.holiday === 'qingming'
+    (sc.holiday === null && sc.term !== '冬至') || sc.holiday === 'qingming'
       ? ''
       : EYES.map(x => `<ellipse cx="${x * CW + CW / 2}" cy="${3 * CH + 6}" rx="7" ry="3.5" fill="#FF4F7B"/>`).join('')
   const zz =

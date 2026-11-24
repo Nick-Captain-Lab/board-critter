@@ -15,8 +15,8 @@ A tiny Claude Code mod: a pane with an animated pixel critter that reacts to wha
 | :-: | :-: |
 | <img src="docs/scene-early-spring.svg" width="240" alt="早春・走路"> | <img src="docs/scene-plum-rain.svg" width="240" alt="梅雨・呼吸"> |
 | 早春・走路 | 梅雨・呼吸 |
-| <img src="docs/scene-midsummer.svg" width="240" alt="盛夏・跳"> | <img src="docs/scene-late-autumn.svg" width="240" alt="深秋・走路"> |
-| 盛夏・跳 | 深秋・走路 |
+| <img src="docs/scene-midsummer.svg" width="240" alt="盛夏・跳"> | <img src="docs/scene-winter-solstice.svg" width="240" alt="冬至・捧湯圓"> |
+| 盛夏・跳 | 冬至・捧湯圓 |
 | <img src="docs/scene-deep-winter-night.svg" width="240" alt="寒冬夜・睡覺"> | <img src="docs/scene-new-year.svg" width="240" alt="跨年"> |
 | 寒冬夜・睡覺 | 跨年 |
 | <img src="docs/scene-lunar-new-year.svg" width="240" alt="過年"> | <img src="docs/scene-dragon-boat.svg" width="240" alt="端午"> |
@@ -44,7 +44,7 @@ A tiny Claude Code mod: a pane with an animated pixel critter that reacts to wha
 **節日**
 
 - 跨年煙火與新年份、過年（小年夜到初五）、元宵、情人節、清明、端午、七夕、中秋、萬聖節、聖誕節
-- 過節會臉紅（清明除外）
+- 過節會臉紅（清明除外；冬至吃湯圓也算過節）
 - 立春拿春捲、夏至拿冰棒、冬至捧湯圓
 
 ## 安裝
