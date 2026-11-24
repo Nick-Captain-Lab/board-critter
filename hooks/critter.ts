@@ -422,7 +422,10 @@ export function mascotSvg(m: Mood, sc: Scene = { stage: 'earlySpring', holiday: 
     `<rect x="${x * CW}" y="${y * CH}" width="${CW + 0.5}" height="${CH + 0.5}" fill="${ORANGE}"/>`
   // 同一列相連的方塊合成一條，方塊之間就不會有細縫
   const runs: { x: number; y: number; w: number }[] = []
-  MASCOT_ROWS.slice(0, BODY_ROWS).forEach((row, y) => {
+  // 瞇眼時眼睛那格直接當成身體，整列連成一條，眼睛兩側才不會有接縫
+  const squint = m === 'bob' || m === 'sleep'
+  MASCOT_ROWS.slice(0, BODY_ROWS).forEach((raw, y) => {
+    const row = squint && y === 2 ? raw.replace(/ /g, (c, i: number) => (EYES.includes(i) ? 'B' : c)) : raw
     for (const r of row.matchAll(/B+/g)) runs.push({ x: r.index ?? 0, y, w: r[0].length })
   })
   // 腳從身體裡面長出來（往上多畫一格、藏在身體後面），身體上下跳時腳跟身體不會分開
@@ -439,14 +442,15 @@ export function mascotSvg(m: Mood, sc: Scene = { stage: 'earlySpring', holiday: 
   const held = heldOf(sc.holiday, sc.term)
   // 萬聖節南瓜、中秋月餅比較大顆：左手往外伸長一格來拿
   const longArm = sc.holiday === 'halloween' || sc.holiday === 'midAutumn'
-  const squint = m === 'bob' || m === 'sleep'
   // 張眼：眼睛格塗深色，上面一塊會眨的眼皮
   // 瞇瞇眼：眼睛格直接塗回身體色，只畫下方一條深色細線（舊做法是用橘色蓋住深色格的上面七成，
   // 縮小顯示時深色格的上緣會從邊界透出來，變成眼睛上方一條怪怪的黑線）
   const holes = squint
-    ? EYES.map(x => `<rect x="${x * CW - 0.5}" y="${2 * CH - 0.5}" width="${CW + 1}" height="${CH + 1}" fill="${ORANGE}"/><rect x="${x * CW}" y="${2 * CH + CH * 0.7}" width="${CW}" height="${CH * 0.3}" fill="#2a2a2a"/>`).join('')
+    ? ''
     : EYES.map(x => `<rect x="${x * CW}" y="${2 * CH}" width="${CW}" height="${CH}" fill="#2a2a2a"/>`).join('')
-  const eyes = squint ? '' : `<g class="lid">${EYES.map(x => cell(x, 2)).join('')}</g>`
+  const eyes = squint
+    ? EYES.map(x => `<rect x="${x * CW}" y="${2 * CH + CH * 0.7}" width="${CW}" height="${CH * 0.3}" fill="#2a2a2a"/>`).join('')
+    : `<g class="lid">${EYES.map(x => cell(x, 2)).join('')}</g>`
   const hot = (sc.holiday === null && (sc.stage === 'midsummer' || sc.stage === 'autumnHeat')) || sc.holiday === 'dragonBoat'
   // 端午超熱：多滴汗、頭頂冒蒸氣
   const scorching = sc.holiday === 'dragonBoat' && !sc.night
