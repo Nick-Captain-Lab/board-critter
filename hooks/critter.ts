@@ -439,13 +439,14 @@ export function mascotSvg(m: Mood, sc: Scene = { stage: 'earlySpring', holiday: 
   const held = heldOf(sc.holiday, sc.term)
   // 萬聖節南瓜、中秋月餅比較大顆：左手往外伸長一格來拿
   const longArm = sc.holiday === 'halloween' || sc.holiday === 'midAutumn'
-  // 眼睛是挖空的洞：先塗成天空色，才不會透出面板的底色
-  const holes = EYES.map(x => `<rect x="${x * CW}" y="${2 * CH}" width="${CW}" height="${CH}" fill="#2a2a2a"/>`).join('')
-  // 瞇瞇眼：蓋住眼睛上面七成；張眼：一塊會眨的眼皮
   const squint = m === 'bob' || m === 'sleep'
-  const eyes = squint
-    ? EYES.map(x => `<rect x="${x * CW}" y="${2 * CH}" width="${CW}" height="${CH * 0.7}" fill="${ORANGE}"/>`).join('')
-    : `<g class="lid">${EYES.map(x => cell(x, 2)).join('')}</g>`
+  // 張眼：眼睛格塗深色，上面一塊會眨的眼皮
+  // 瞇瞇眼：眼睛格直接塗回身體色，只畫下方一條深色細線（舊做法是用橘色蓋住深色格的上面七成，
+  // 縮小顯示時深色格的上緣會從邊界透出來，變成眼睛上方一條怪怪的黑線）
+  const holes = squint
+    ? EYES.map(x => `<rect x="${x * CW - 0.5}" y="${2 * CH - 0.5}" width="${CW + 1}" height="${CH + 1}" fill="${ORANGE}"/><rect x="${x * CW}" y="${2 * CH + CH * 0.7}" width="${CW}" height="${CH * 0.3}" fill="#2a2a2a"/>`).join('')
+    : EYES.map(x => `<rect x="${x * CW}" y="${2 * CH}" width="${CW}" height="${CH}" fill="#2a2a2a"/>`).join('')
+  const eyes = squint ? '' : `<g class="lid">${EYES.map(x => cell(x, 2)).join('')}</g>`
   const hot = (sc.holiday === null && (sc.stage === 'midsummer' || sc.stage === 'autumnHeat')) || sc.holiday === 'dragonBoat'
   // 端午超熱：多滴汗、頭頂冒蒸氣
   const scorching = sc.holiday === 'dragonBoat' && !sc.night
