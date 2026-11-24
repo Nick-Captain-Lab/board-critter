@@ -9,6 +9,15 @@ A tiny Claude Code mod: a pane with an animated pixel critter that reacts to wha
 
 > 非官方粉絲作品。小怪獸造型取自 Claude Code 啟動畫面的吉祥物 Clawd，相關名稱與造型屬於 Anthropic。本專案與 Anthropic 無關，也未經其認可。
 
+## 四種模式
+
+| | |
+| :-: | :-: |
+| <img src="docs/mode-walk.svg" width="240" alt="Claude 在工作：走路"> | <img src="docs/mode-jump.svg" width="240" alt="待辦全部打勾：開心跳 2 分鐘"> |
+| Claude 在工作：走路 | 待辦全部打勾：開心跳 2 分鐘 |
+| <img src="docs/mode-bob.svg" width="240" alt="待命中：瞇眼呼吸"> | <img src="docs/mode-sleep.svg" width="240" alt="閒置 10 分鐘：睡覺，頭上冒 z"> |
+| 待命中：瞇眼呼吸 | 閒置 10 分鐘：睡覺，頭上冒 z |
+
 ## 場景圖鑑
 
 | | |

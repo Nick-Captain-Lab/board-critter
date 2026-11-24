@@ -26,6 +26,11 @@ export const SHOTS: Shot[] = [
   { file: 'christmas', mood: 'walk', scene: { stage: 'deepWinter', holiday: 'christmas', night: false } },
 ]
 
+// 四種模式：同一個背景（盛夏夜，只有星星和月亮），只換動作
+const MODE_SCENE: Scene = { stage: 'midsummer', holiday: null, night: true }
+export const MODES: Mood[] = ['walk', 'jump', 'bob', 'sleep']
+for (const m of MODES) writeFileSync(new URL(`mode-${m}.svg`, OUT), mascotSvg(m, MODE_SCENE))
+
 for (const s of SHOTS) writeFileSync(new URL(`scene-${s.file}.svg`, OUT), mascotSvg(s.mood, s.scene))
 
 // 介面模擬圖：仿桌面版的三欄配置（簡化示意，不是真實截圖）
@@ -91,4 +96,4 @@ ${[0, 1, 2].map(i => `<circle cx="${critterX + 8}" cy="${TOP + 340 + i * 26}" r=
 </svg>`
 writeFileSync(new URL('ui-mockup.svg', OUT), ui)
 
-console.log(`已輸出 ${SHOTS.length} 張場景圖與 1 張介面模擬圖到 docs/`)
+console.log(`已輸出 ${MODES.length} 張模式圖、${SHOTS.length} 張場景圖與 1 張介面模擬圖到 docs/`)
