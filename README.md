@@ -4,7 +4,7 @@ A tiny Claude Code mod: a pane with an animated pixel critter that reacts to wha
 
 一個 Claude Code 的小 mod：在側邊面板放一隻會動的橘色小怪獸。它會跟著 Claude 的工作狀態、白天晚上、節氣與節日換動作和場景。打開一堆文字介面時，一眼就認得出這是 Claude，看了也療癒。
 
-<p align="center"><img src="docs/ui-mockup.svg" width="720" alt="介面示意：左邊是對話，右邊面板裡的小怪獸在走路"></p>
+<p align="center"><img src="docs/ui-mockup.svg" width="760" alt="介面示意：左邊是討論串清單，中間是對話，右邊側邊面板的「外掛程式」分頁裡，小怪獸在走路"></p>
 <p align="center"><sub>介面示意圖（簡化模擬，不是真實截圖）</sub></p>
 
 > 非官方粉絲作品。小怪獸造型取自 Claude Code 啟動畫面的吉祥物 Clawd，相關名稱與造型屬於 Anthropic。本專案與 Anthropic 無關，也未經其認可。
