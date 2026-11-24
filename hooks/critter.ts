@@ -170,19 +170,28 @@ export const SCENE_LABEL: Record<Stage | Holiday, string> = {
   christmas: '聖誕節',
 }
 
+// 照官方 App 圖量的比例：正方格 11 欄 × 8 列；身體 6 列、眼睛在第 3 列、手在第 3～4 列、腳 2 列
 const MASCOT_ROWS = [
-  '   BBBBBBBBBBBB   ',
-  '   BB BBBBBB BB   ',
-  ' BBBBBBBBBBBBBBBB ',
-  '   BBBBBBBBBBBB   ',
-  '    B B    B B    ',
+  ' BBBBBBBBB ',
+  ' BBBBBBBBB ',
+  'BB BBBBB BB',
+  'BBBBBBBBBBB',
+  ' BBBBBBBBB ',
+  ' BBBBBBBBB ',
+  ' B B   B B ',
+  ' B B   B B ',
 ]
-const CW = 10
-const CH = 14
+const U = 12
+const CW = U
+const CH = U
+const BODY_ROWS = 6
+const EYES = [2, 8] // 眼睛所在欄（第 3 列）
+// 舊版道具是照「頭頂 x 30～150、中心 90」畫的；新頭頂是 x 12～120、中心 66，用這個轉換套上去
+const ON_HEAD = 'translate(66 0) scale(0.9) translate(-90 0)'
 const ORANGE = '#D97757'
-// 畫布：小怪獸在 x 0～180、y 0～70，四周留空間給背景道具
-const VB = { x: -30, y: -50, w: 240, h: 135 }
-const GROUND = 70
+// 畫布：小怪獸在 x 0～132、y 0～96，四周留空間給背景道具
+const VB = { x: -54, y: -50, w: 240, h: 165 }
+const GROUND = 96
 
 // 固定的假亂數，讓每次畫出來的雪、花瓣位置都一樣（同一個場景 SVG 不變，面板就不會重播動畫）
 const spots = (n: number, seed: number) =>
@@ -245,6 +254,12 @@ const burst = (cx: number, cy: number, color: string, delay: number) =>
 
 /** 戴在小怪獸頭上的東西（跟著身體一起動） */
 function hatOf(holiday: Holiday | null, stage: Stage): string {
+  const h = hatShape(holiday, stage)
+
+  return h === '' ? '' : `<g transform="${ON_HEAD}">${h}</g>`
+}
+
+function hatShape(holiday: Holiday | null, stage: Stage): string {
   if (holiday === 'christmas')
     return `<path d="M40 2 L140 2 L118 -22 L150 -34 L100 -26 Z" fill="#D8352A"/><rect x="34" y="-6" width="112" height="9" rx="4" fill="#fff"/><circle cx="152" cy="-34" r="6" fill="#fff"/>`
   if (holiday === 'lunarNewYear')
@@ -258,27 +273,27 @@ function hatOf(holiday: Holiday | null, stage: Stage): string {
   return ''
 }
 
-/** 拿在左手上的小東西（跟著身體一起動）；左手在 x 10～30、y 28～42（右上角留給太陽月亮） */
+/** 拿在左手上的小東西（跟著身體一起動）；左手在 x 0～12、y 24～48（右上角留給太陽月亮） */
 function heldOf(holiday: Holiday | null, term: Term | undefined): string {
   if (holiday === null && term === '冬至')
     // 一碗湯圓
-    return `<g transform="translate(18 27)"><circle cx="-4" cy="-4" r="3.5" fill="#fff"/><circle cx="3" cy="-5" r="3.5" fill="#F5A8B8"/><circle cx="0" cy="-8" r="3.5" fill="#fff"/><path d="M-12 -3 L12 -3 Q11 6 0 6 Q-11 6 -12 -3Z" fill="#5B8DC9"/></g>`
+    return `<g transform="translate(4 23)"><circle cx="-4" cy="-4" r="3.5" fill="#fff"/><circle cx="3" cy="-5" r="3.5" fill="#F5A8B8"/><circle cx="0" cy="-8" r="3.5" fill="#fff"/><path d="M-12 -3 L12 -3 Q11 6 0 6 Q-11 6 -12 -3Z" fill="#5B8DC9"/></g>`
   if (holiday === null && term === '夏至')
     // 冰棒
-    return `<g transform="translate(18 28) rotate(-12)"><rect x="-1.5" y="-6" width="3" height="10" fill="#D9B27C"/><rect x="-6" y="-24" width="12" height="19" rx="5" fill="#F27A9B"/><rect x="-6" y="-14" width="12" height="3" fill="#fff" opacity=".6"/></g>`
+    return `<g transform="translate(4 24) rotate(-12)"><rect x="-1.5" y="-6" width="3" height="10" fill="#D9B27C"/><rect x="-6" y="-24" width="12" height="19" rx="5" fill="#F27A9B"/><rect x="-6" y="-14" width="12" height="3" fill="#fff" opacity=".6"/></g>`
   if (holiday === null && term === '立春')
     // 春捲
-    return `<g transform="translate(18 22) rotate(-20)"><rect x="-12" y="-5" width="24" height="10" rx="5" fill="#E8C77E"/><line x1="-4" y1="-5" x2="-4" y2="5" stroke="#C9A25E" stroke-width="1.2"/><line x1="4" y1="-5" x2="4" y2="5" stroke="#C9A25E" stroke-width="1.2"/><circle cx="-12" cy="0" r="3" fill="#7FB34A"/></g>`
+    return `<g transform="translate(2 18) rotate(-20)"><rect x="-12" y="-5" width="24" height="10" rx="5" fill="#E8C77E"/><line x1="-4" y1="-5" x2="-4" y2="5" stroke="#C9A25E" stroke-width="1.2"/><line x1="4" y1="-5" x2="4" y2="5" stroke="#C9A25E" stroke-width="1.2"/><circle cx="-12" cy="0" r="3" fill="#7FB34A"/></g>`
   switch (holiday) {
     case 'lantern':
       // 燈籠掛在手下面晃
-      return `<g class="sway" style="transform-origin:15px 42px">${lanternShape(15, 56, 1)}</g>`
+      return `<g class="sway" style="transform-origin:6px 48px">${lanternShape(6, 62, 1)}</g>`
     case 'dragonBoat':
-      return `<g transform="translate(18 29)"><path d="M-11 0 L11 0 L0 -18 Z" fill="#4F8A3C" stroke="#2E5E22" stroke-width="1.5" stroke-linejoin="round"/><line x1="-6" y1="-8" x2="6" y2="-8" stroke="#C9A25E" stroke-width="2"/></g>`
+      return `<g transform="translate(4 25)"><path d="M-11 0 L11 0 L0 -18 Z" fill="#4F8A3C" stroke="#2E5E22" stroke-width="1.5" stroke-linejoin="round"/><line x1="-6" y1="-8" x2="6" y2="-8" stroke="#C9A25E" stroke-width="2"/></g>`
     case 'midAutumn':
-      return `<g transform="translate(18 19)"><circle r="10" fill="#C98B3C"/><circle r="6.5" fill="none" stroke="#9C6524" stroke-width="1.5"/></g>`
+      return `<g transform="translate(-6 14)"><circle r="10" fill="#C98B3C"/><circle r="6.5" fill="none" stroke="#9C6524" stroke-width="1.5"/></g>`
     case 'halloween':
-      return `<g transform="translate(18 19)"><ellipse rx="13" ry="10" fill="#E8822C"/><rect x="-1.5" y="-14" width="3" height="5" fill="#4F6B2C"/><path d="M-6 -3 L-2 -3 L-4 -6Z M2 -3 L6 -3 L4 -6Z" fill="#3B2A4A"/><rect x="-5" y="3" width="10" height="2" fill="#3B2A4A"/></g>`
+      return `<g transform="translate(-6 14)"><ellipse rx="13" ry="10" fill="#E8822C"/><rect x="-1.5" y="-14" width="3" height="5" fill="#4F6B2C"/><path d="M-6 -3 L-2 -3 L-4 -6Z M2 -3 L6 -3 L4 -6Z" fill="#3B2A4A"/><rect x="-5" y="3" width="10" height="2" fill="#3B2A4A"/></g>`
     default:
       return ''
   }
@@ -318,7 +333,7 @@ function backdropOf(sc: Scene, sky: string): string {
     : heatSky
     ? `<defs><linearGradient id="heatSky" gradientUnits="userSpaceOnUse" x1="0" y1="${VB.y}" x2="0" y2="${GROUND}"><stop offset="0" stop-color="#FF4A2E"/><stop offset=".3" stop-color="#FF8A3D"/><stop offset=".62" stop-color="#FFC98A"/><stop offset="1" stop-color="#7EC8F0"/></linearGradient></defs><rect x="${VB.x}" y="${VB.y}" width="${VB.w}" height="${VB.h}" rx="14" fill="url(#heatSky)"/>`
     : `<rect x="${VB.x}" y="${VB.y}" width="${VB.w}" height="${VB.h}" rx="14" fill="${sky}"/>`
-  out += `<rect x="${VB.x}" y="${GROUND}" width="${VB.w}" height="${VB.y + VB.h - GROUND}" fill="${dark ? '#00000033' : '#0000000d'}"/>`
+  out += `<rect x="${VB.x}" y="${GROUND}" width="${VB.w}" height="${VB.y + VB.h - GROUND}" fill="${dark ? '#00000059' : '#0000002e'}"/>`
   const rainy = sc.holiday === 'qingming' || (sc.holiday === null && sc.stage === 'plumRain')
   if (dark && sc.holiday !== 'lunarNewYear' && !rainy) out += stars(14)
 
@@ -326,39 +341,40 @@ function backdropOf(sc: Scene, sky: string): string {
     case 'newyear':
       return (
         out +
-        burst(-2, -26, '#F4B63F', 0) +
-        burst(38, -40, '#E86A8C', 0.6) +
-        burst(184, -28, '#7FD1E8', 1.2) +
+        burst(-26, -26, '#F4B63F', 0) +
+        burst(14, -40, '#E86A8C', 0.6) +
+        burst(160, -28, '#7FD1E8', 1.2) +
         (sc.year === undefined
           ? ''
-          : `<text x="90" y="-14" text-anchor="middle" font-size="24" font-weight="700" font-family="Menlo, monospace" fill="#F6E7A1" letter-spacing="1">${sc.year}</text>`)
+          : `<text x="66" y="-14" text-anchor="middle" font-size="24" font-weight="700" font-family="Menlo, monospace" fill="#F6E7A1" letter-spacing="1">${sc.year}</text>`)
       )
     case 'lunarNewYear':
       // 深磚紅地面（比天空底部再暗一階）
-      return out + `<rect x="${VB.x}" y="${GROUND}" width="${VB.w}" height="${VB.y + VB.h - GROUND}" fill="#4A0E0E"/>` + `<g class="sway" style="transform-origin:-10px -50px">${lanternShape(-10, -28, 1, '#F2C14E')}</g><g class="sway" style="transform-origin:190px -50px;animation-delay:-.8s">${lanternShape(190, -28, 1, '#F2C14E')}</g>`
+      return out + `<rect x="${VB.x}" y="${GROUND}" width="${VB.w}" height="${VB.y + VB.h - GROUND}" fill="#4A0E0E"/>` + `<g class="sway" style="transform-origin:-34px -50px">${lanternShape(-34, -28, 1, '#F2C14E')}</g><g class="sway" style="transform-origin:166px -50px;animation-delay:-.8s">${lanternShape(166, -28, 1, '#F2C14E')}</g>`
     case 'lantern':
-      return out + moon(182, -30, 10, true, sky) + rising(k => lanternShape(0, 0, 0.5 + (k % 3) * 0.15), 5, 9, 9)
+      return out + moon(158, -30, 10, true, sky) + rising(k => lanternShape(0, 0, 0.5 + (k % 3) * 0.15), 5, 9, 9)
     case 'qingming':
       return out + falling(() => `<rect width="1.2" height="9" fill="#8EA3B5"/>`, 22, 4, 1.1, 'rain')
     case 'qixi':
     case 'valentine':
       return out + rising(k => heart(0.7 + (k % 3) * 0.25), 8, 5, 6)
     case 'midAutumn':
-      return out + `<circle cx="172" cy="-18" r="38" fill="#F6E7A1" opacity=".18"/>` + moon(172, -18, 30, true, sky)
+      return out + `<circle cx="150" cy="-18" r="38" fill="#F6E7A1" opacity=".18"/>` + moon(150, -18, 30, true, sky)
     case 'halloween':
-      return out + moon(178, -28, 11, false, sky)
+      return out + moon(156, -28, 11, false, sky)
     case 'christmas':
-      return out + falling(() => `<circle r="2" fill="#fff"/>`, 20, 2, 5)
+      // 下雪加地上積雪
+      return out + falling(() => `<circle r="2" fill="#fff"/>`, 20, 2, 5) + `<rect x="${VB.x}" y="${GROUND - 1}" width="${VB.w}" height="${VB.y + VB.h - GROUND + 1}" fill="#F4F8FC"/>`
     case 'dragonBoat':
       // 端午很熱：白天一顆超大太陽
       // 柏油路灰色地面
       if (!sc.night)
         return (
           out +
-          sunAt(176, -22, 2.4, '#FFE066') +
+          sunAt(152, -22, 2.4, '#FFE066') +
           `<rect x="${VB.x}" y="${GROUND}" width="${VB.w}" height="${VB.y + VB.h - GROUND}" fill="#6E6E6E"/>` +
           // 地面往上飄的熱浪
-          [-10, 30, 70, 110, 150, 195]
+          [-34, 6, 46, 86, 126, 171]
             .map(
               (x, i) =>
                 `<g transform="translate(${x} ${GROUND + 6})"><path class="heat" style="animation-delay:-${(i * 0.45).toFixed(2)}s" d="M0 0 q4 -5 0 -10 q-4 -5 0 -10 q4 -5 0 -10" fill="none" stroke="#FFF4D6" stroke-width="2" stroke-linecap="round"/></g>`,
@@ -375,7 +391,7 @@ function backdropOf(sc: Scene, sky: string): string {
     `<rect x="-3" y="-3" width="6" height="6" rx="1" fill="${colors[k % colors.length]}"/>`
   const rain = (n: number) => falling(() => `<rect width="1.2" height="9" fill="#7E93A6"/>`, n, 4, 1.1, 'rain')
   const snow = (n: number, r: number) => falling(() => `<circle r="${r}" fill="#fff"/>`, n, 2, 5)
-  if (sc.night && !rainy) out += moon(182, -30, 10, false, sky)
+  if (sc.night && !rainy) out += moon(158, -30, 10, false, sky)
   switch (sc.stage) {
     case 'earlySpring':
       // 櫻花季：滿天花瓣
@@ -386,10 +402,10 @@ function backdropOf(sc: Scene, sky: string): string {
     case 'plumRain':
       return out + rain(26)
     case 'midsummer':
-      return out + (sc.night ? '' : sunAt(178, -26, 1.6))
+      return out + (sc.night ? '' : sunAt(154, -26, 1.6))
     case 'autumnHeat':
       // 秋老虎：還是熱，太陽偏橘，零星黃葉
-      return out + (sc.night ? '' : sunAt(180, -28, 1.2, '#F28C28')) + falling(leaf(['#E0A63A', '#D9B23A']), 4, 6, 9, 'drift')
+      return out + (sc.night ? '' : sunAt(156, -28, 1.2, '#F28C28')) + falling(leaf(['#E0A63A', '#D9B23A']), 4, 6, 9, 'drift')
     case 'lateAutumn':
       return out + falling(leaf(['#C2571F', '#8E3B1F', '#E07B2B']), 14, 6, 6, 'drift')
     case 'earlyWinter':
@@ -406,79 +422,82 @@ export function mascotSvg(m: Mood, sc: Scene = { stage: 'earlySpring', holiday: 
     `<rect x="${x * CW}" y="${y * CH}" width="${CW + 0.5}" height="${CH + 0.5}" fill="${ORANGE}"/>`
   // 同一列相連的方塊合成一條，方塊之間就不會有細縫
   const runs: { x: number; y: number; w: number }[] = []
-  MASCOT_ROWS.slice(0, 4).forEach((row, y) => {
+  MASCOT_ROWS.slice(0, BODY_ROWS).forEach((row, y) => {
     for (const r of row.matchAll(/B+/g)) runs.push({ x: r.index ?? 0, y, w: r[0].length })
   })
   // 腳從身體裡面長出來（往上多畫一格、藏在身體後面），身體上下跳時腳跟身體不會分開
-  const feet = [...(MASCOT_ROWS[4] ?? '')].flatMap((ch, x) => (ch === 'B' ? [x] : []))
+  const feet = [...(MASCOT_ROWS[BODY_ROWS] ?? '')].flatMap((ch, x) => (ch === 'B' ? [x] : []))
   const legRect = (x: number, extra: string) =>
-    `<rect x="${x * CW}" y="${3 * CH}" width="${CW}" height="${2 * CH}" ${extra}/>`
+    `<rect x="${x * CW}" y="${(BODY_ROWS - 1) * CH}" width="${CW}" height="${(MASCOT_ROWS.length - BODY_ROWS + 1) * CH}" ${extra}/>`
   const bodyRect = (r: { x: number; y: number; w: number }, extra: string) =>
     `<rect x="${r.x * CW}" y="${r.y * CH}" width="${r.w * CW}" height="${CH + 1}" ${extra}/>`
   const legGroups = (extra: string) =>
-    feet.map(x => `<g class="${x === 4 || x === 11 ? 'la' : 'lb'}">${legRect(x, extra)}</g>`).join('')
+    feet.map((x, i) => `<g class="${i % 2 === 0 ? 'la' : 'lb'}">${legRect(x, extra)}</g>`).join('')
   const body = runs.map(r => bodyRect(r, `fill="${ORANGE}"`)).join('')
   const legs = legGroups(`fill="${ORANGE}"`)
   const sky = skyOf(sc)
+  const held = heldOf(sc.holiday, sc.term)
+  // 萬聖節南瓜、中秋月餅比較大顆：左手往外伸長一格來拿
+  const longArm = sc.holiday === 'halloween' || sc.holiday === 'midAutumn'
   // 眼睛是挖空的洞：先塗成天空色，才不會透出面板的底色
-  const holes = `<rect x="${5 * CW}" y="${CH}" width="${CW}" height="${CH}" fill="#2a2a2a"/><rect x="${12 * CW}" y="${CH}" width="${CW}" height="${CH}" fill="#2a2a2a"/>`
+  const holes = EYES.map(x => `<rect x="${x * CW}" y="${2 * CH}" width="${CW}" height="${CH}" fill="#2a2a2a"/>`).join('')
   // 瞇瞇眼：蓋住眼睛上面七成；張眼：一塊會眨的眼皮
   const squint = m === 'bob' || m === 'sleep'
   const eyes = squint
-    ? `<rect x="${5 * CW}" y="${CH}" width="${CW}" height="${CH * 0.7}" fill="${ORANGE}"/><rect x="${12 * CW}" y="${CH}" width="${CW}" height="${CH * 0.7}" fill="${ORANGE}"/>`
-    : `<g class="lid">${cell(5, 1)}${cell(12, 1)}</g>`
+    ? EYES.map(x => `<rect x="${x * CW}" y="${2 * CH}" width="${CW}" height="${CH * 0.7}" fill="${ORANGE}"/>`).join('')
+    : `<g class="lid">${EYES.map(x => cell(x, 2)).join('')}</g>`
   const hot = (sc.holiday === null && (sc.stage === 'midsummer' || sc.stage === 'autumnHeat')) || sc.holiday === 'dragonBoat'
   // 端午超熱：多滴汗、頭頂冒蒸氣
   const scorching = sc.holiday === 'dragonBoat' && !sc.night
   const sweat = hot && !sc.night && m !== 'sleep'
     ? scorching
       ? [
-          [158, 4, 0],
-          [24, 30, 0.7],
-          [146, 2, 1.4],
-          [36, 2, 1.9],
+          [126, 4, 0],
+          [6, 6, 0.7],
+          [116, -4, 1.4],
+          [18, -4, 1.9],
         ]
           .map(
             ([x, y, d]) =>
               `<path class="drip" style="animation-delay:-${d}s" transform="translate(${x} ${y})" d="M0 0 Q-4 7 0 9 Q4 7 0 0Z" fill="#7FC4E8"/>`,
           )
           .join('') +
-        [65, 90, 115]
+        [40, 66, 92]
           .map(
             (x, i) =>
               `<g transform="translate(${x} -2)"><path class="heat" style="animation-delay:-${(i * 0.6).toFixed(1)}s" d="M0 0 q3 -4 0 -8 q-3 -4 0 -8" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/></g>`,
           )
           .join('')
-      : `<path class="drip" d="M158 4 Q154 11 158 13 Q162 11 158 4Z" fill="#7FC4E8"/>`
+      : `<path class="drip" transform="translate(126 4)" d="M0 0 Q-4 7 0 9 Q4 7 0 0Z" fill="#7FC4E8"/>`
     : ''
   // 有節日就臉紅紅（清明掃墓氣氛肅穆，不臉紅）
   const blush =
     sc.holiday === null || sc.holiday === 'qingming'
       ? ''
-      : `<ellipse cx="52" cy="35" rx="8" ry="4" fill="#FF4F7B"/><ellipse cx="128" cy="35" rx="8" ry="4" fill="#FF4F7B"/>`
+      : EYES.map(x => `<ellipse cx="${x * CW + CW / 2}" cy="${3 * CH + 6}" rx="7" ry="3.5" fill="#FF4F7B"/>`).join('')
   const zz =
     m === 'sleep'
-      ? `<text class="z1" x="150" y="0" font-size="12" font-family="sans-serif" fill="#999">z</text><text class="z2" x="150" y="0" font-size="10" font-family="sans-serif" fill="#999">z</text>`
+      ? `<text class="z1" x="124" y="-2" font-size="12" font-family="sans-serif" fill="#999">z</text><text class="z2" x="124" y="-2" font-size="10" font-family="sans-serif" fill="#999">z</text>`
       : ''
   const css = [
-    '@keyframes blink{0%,90%,100%{opacity:0}93%,97%{opacity:1}}',
+    '@keyframes blink{0%,88%,100%{transform:scaleY(0)}90.5%{transform:scaleY(.8)}92.5%,94.5%{transform:scaleY(1)}96.5%{transform:scaleY(.8)}}',
     '@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}',
     '@keyframes hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-16px)}60%{transform:translateY(-16px)}}',
     '@keyframes legA{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}',
     '@keyframes legB{0%,100%{transform:translateY(-5px)}50%{transform:translateY(0)}}',
     '@keyframes breathe{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.95)}}',
     '@keyframes z{0%{opacity:0;transform:translate(0,0)}30%{opacity:1}100%{opacity:0;transform:translate(10px,-18px)}}',
-    '@keyframes fall{0%{transform:translate(0,0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translate(8px,130px);opacity:0}}',
-    '@keyframes drift{0%{transform:translate(0,0) rotate(0);opacity:0}10%{opacity:1}50%{transform:translate(14px,65px) rotate(180deg)}90%{opacity:1}100%{transform:translate(-4px,130px) rotate(360deg);opacity:0}}',
-    '@keyframes rain{0%{transform:translate(0,0)}100%{transform:translate(-6px,135px)}}',
-    '@keyframes rise{0%{transform:translate(0,0);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translate(6px,-120px);opacity:0}}',
+    '@keyframes fall{0%{transform:translate(0,0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translate(8px,165px);opacity:0}}',
+    '@keyframes drift{0%{transform:translate(0,0) rotate(0);opacity:0}10%{opacity:1}50%{transform:translate(14px,82px) rotate(180deg)}90%{opacity:1}100%{transform:translate(-4px,165px) rotate(360deg);opacity:0}}',
+    '@keyframes rain{0%{transform:translate(0,0)}100%{transform:translate(-6px,170px)}}',
+    '@keyframes rise{0%{transform:translate(0,0);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translate(6px,-150px);opacity:0}}',
     '@keyframes twinkle{0%,100%{opacity:.25}50%{opacity:1}}',
     '@keyframes spin{to{transform:rotate(360deg)}}',
     '@keyframes sway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}',
     '@keyframes burst{0%{transform:scale(.1);opacity:0}15%{opacity:1}70%{transform:scale(1);opacity:1}100%{transform:scale(1.15);opacity:0}}',
     '@keyframes heat{0%{transform:translateY(0);opacity:0}30%{opacity:.8}100%{transform:translateY(-26px);opacity:0}}',
     '@keyframes drip{0%,60%{transform:translateY(0);opacity:0}70%{opacity:1}100%{transform:translateY(14px);opacity:0}}',
-    '.lid{opacity:0;animation:blink 3.5s infinite}',
+    '.lid{transform-box:fill-box;transform-origin:50% 0;transform:scaleY(0);animation:blink 3.5s infinite}',
     '.bob .body{animation:bob .9s ease-in-out infinite}',
     '.walk .body{animation:bob .4s steps(2) infinite}.walk .la{animation:legA .4s steps(2) infinite}.walk .lb{animation:legB .4s steps(2) infinite}',
     '.jump .all{animation:hop .7s ease-in-out infinite}',
@@ -489,7 +508,7 @@ export function mascotSvg(m: Mood, sc: Scene = { stage: 'earlySpring', holiday: 
     '.heat{animation:heat 1.8s ease-out infinite}.burst{animation:burst 1.8s ease-out infinite}.drip{animation:drip 2.2s ease-in infinite}',
   ].join('')
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" class="${m}" viewBox="${VB.x} ${VB.y} ${VB.w} ${VB.h}" width="${VB.w}" height="${VB.h}"><style>${css}</style><defs><clipPath id="frame"><rect x="${VB.x}" y="${VB.y}" width="${VB.w}" height="${VB.h}" rx="14"/></clipPath></defs><g clip-path="url(#frame)">${backdropOf(sc, sky)}<g class="all">${legs}<g class="body">${holes}${body}${eyes}${blush}${hatOf(sc.holiday, sc.stage)}${heldOf(sc.holiday, sc.term)}${sweat}</g></g>${zz}</g></svg>`
+  return `<svg xmlns="http://www.w3.org/2000/svg" class="${m}" viewBox="${VB.x} ${VB.y} ${VB.w} ${VB.h}" width="${VB.w}" height="${VB.h}"><style>${css}</style><defs><clipPath id="frame"><rect x="${VB.x}" y="${VB.y}" width="${VB.w}" height="${VB.h}" rx="14"/></clipPath></defs><g clip-path="url(#frame)">${backdropOf(sc, sky)}<g class="all">${legs}<g class="body">${holes}${body}${eyes}${blush}${hatOf(sc.holiday, sc.stage)}${longArm ? `<rect x="${-CW}" y="${2 * CH}" width="${CW + 1}" height="${2 * CH + 1}" fill="${ORANGE}"/>` : ''}${held}${sweat}</g></g>${zz}</g></svg>`
 }
 
 export const MOOD_LABEL: Record<Mood, string> = {

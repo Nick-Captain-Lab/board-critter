@@ -34,8 +34,8 @@ const H = 480
 const PANE_X = 520
 const scene: Scene = { stage: 'lateAutumn', holiday: null, night: false }
 const critter = mascotSvg('walk', scene).replace(
-  ' width="240" height="135"',
-  ` x="${PANE_X + 40}" y="96" width="280" height="158"`,
+  ' width="240" height="165"',
+  ` x="${PANE_X + 40}" y="64" width="280" height="192"`,
 )
 const bubble = (x: number, y: number, w: number, lines: number, fill: string) =>
   `<rect x="${x}" y="${y}" width="${w}" height="${18 + lines * 16}" rx="12" fill="${fill}"/>` +
@@ -54,9 +54,9 @@ ${bubble(28, 240, 380, 4, '#FFFFFF')}
 <rect x="28" y="${H - 64}" width="${PANE_X - 56}" height="40" rx="12" fill="#FFFFFF" stroke="#D8D5CC"/>
 <text x="46" y="${H - 39}" font-size="13" fill="#999">輸入訊息…</text>
 ${critter}
-<text x="${PANE_X + 180}" y="282" text-anchor="middle" font-size="13" fill="#666">${MOOD_LABEL.walk}（${SCENE_LABEL[scene.stage]}）</text>
-<text x="${PANE_X + 40}" y="322" font-size="13" font-weight="600" fill="#333">任務進度</text>
-${[0, 1, 2].map(i => `<circle cx="${PANE_X + 48}" cy="${346 + i * 26}" r="5" fill="${i < 2 ? '#D97757' : 'none'}" stroke="#D97757" stroke-width="1.5"/><rect x="${PANE_X + 62}" y="${342 + i * 26}" width="${[170, 130, 190][i]}" height="8" rx="4" fill="#00000018"/>`).join('')}
+<text x="${PANE_X + 180}" y="286" text-anchor="middle" font-size="13" fill="#666">${MOOD_LABEL.walk}（${SCENE_LABEL[scene.stage]}）</text>
+<text x="${PANE_X + 40}" y="330" font-size="13" font-weight="600" fill="#333">任務進度</text>
+${[0, 1, 2].map(i => `<circle cx="${PANE_X + 48}" cy="${354 + i * 26}" r="5" fill="${i < 2 ? '#D97757' : 'none'}" stroke="#D97757" stroke-width="1.5"/><rect x="${PANE_X + 62}" y="${350 + i * 26}" width="${[170, 130, 190][i]}" height="8" rx="4" fill="#00000018"/>`).join('')}
 </svg>`
 writeFileSync(new URL('ui-mockup.svg', OUT), ui)
 

@@ -92,7 +92,7 @@ export const register: Register = (on, options) => {
     return (
       <Box flexDirection="column">
         {'Svg' in ui ? (
-          <ui.Svg source={mascotSvg(m, scene)} alt={label} width={240} height={135} />
+          <ui.Svg source={mascotSvg(m, scene)} alt={label} width={240} height={165} />
         ) : (
           ROWS.map(line => (
             <Box>
